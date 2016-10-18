@@ -1,0 +1,28 @@
+<div class="row"  data-ng-init="getPage()">
+    <div class="col-md-6 clrp">        
+    	<h1>{{page.name}}</h1>
+    	<button type="buttom" class="btn mb2" data-ng-click="removePage()">Delete planet</button>
+    	<span>radius-{{page.radius}} km</span>
+    	<p>{{page.description}}</p>      	    		
+    </div>
+    <div class="col-md-6 clrp">   
+    	<h1>Редактировать</h1>         	
+    	<form data-ng-submit="updatePage()">
+			<div class="form-group">
+				<input type="text" name="page-name" id="page-name" data-ng-model="page.name"/>
+				<label for="page-name">Name</label>
+			</div>		
+
+			<div class="form-group">
+				<input type="text" name="page-radius" id="page-radius" data-ng-model="page.radius"/>
+				<label for="page-radius">Radius</label>
+			</div>				  
+
+			<div class="form-group">
+				<textarea name="pade-descr" id="pade-descr" data-ng-model="page.description"></textarea>
+				<label for="pade-descr">Description</label>
+			</div>
+			<button type="submit" class="btn full mt2">Submit</button>
+		</form>
+    </div>
+</div>

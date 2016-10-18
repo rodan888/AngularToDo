@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='MyApp'>
+<head>
+<meta charset="UTF-8">
+<title>Angular start</title>
+<link rel="shortcut icon" href="app/assets/img/favicon.png">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<script src="assets/libs/angular/angular.min.js"></script>
+<script src="assets/libs/angular-route/angular-route.min.js"></script>
+<script src="assets/libs/angular-resource/angular-resource.min.js"></script>
+<script src="assets/libs/angular-animate/ng-animate.min.js"></script>
+<script src="assets/libs/ng-map/ng-map.min.js"></script>
+
+<!-- Over script library -->
+<script src="assets/libs/moment/moment.min.js"></script>
+<script src="assets/libs/underscore/underscore.min.js"></script>
+<script src="assets/libs/jQuery/jquery-2.2.0.min.js"></script>
+
+<!-- Main application js -->
+<script src="app.js"></script>	
+
+<!-- Temporary paths to controllers -->
+<script src="components/toDoList/to-do-Ctrl.js"></script>
+
+<script src="components/home/homepageCtrl.js"></script>
+<script src="components/page-one/pageOneCtrl.js"></script>
+<script src="components/page-one-inner/innerpageCtrl.js"></script>
+<script src="components/page-two/pageTwoCtrl.js"></script>
+
+<!-- Over components -->
+<script src="components/directives/directive.js"></script>
+<script src="components/services/dataService.js"></script>
+
+<!-- Styles -->
+<link rel="stylesheet" href="assets/css/vendor.min.css">
+<link rel="stylesheet" href="assets/css/main.min.css">
+
+
+<!-- PROD SCRIPTS -->
+<!-- <script src="prod/js/vendor.min.js"></script> -->
+<!-- <script src="prod/js/controllers.min.js"></script> -->
+</head>
+
+<body data-ng-cloak>
+	<header>
+		<div class="container">
+			<div class="row">
+				<navigation></navigation>
+			</div>
+		</div>
+	</header>
+
+	<main data-ng-controller="taskCtrl">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">	
+					<div class="to-do-wrap">
+
+
+						<div class="task-list">
+							<div data-ng-repeat="task in tasks">
+								<div data-ng-class="{orange: task.priority}">{{task.name}}</div>
+								<div>
+									<h2>Add coment</h2>
+									<p data-ng-repeat="coment in task.coment" class="label">
+										{{coment.text}}|| {{coment.date}}
+									</p>
+									<form data-ng-submit="addComent(coment,$index)">
+										<div class="form-group">
+											<textarea  
+														type="text" 
+														id="coment" 												
+														data-ng-model="coment.text">
+											</textarea>
+											<label for="coment">Coment</label>
+										</div>
+										<button type="submit" class="btn">add coment</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>				
+
+
+						<div class="add-task">
+							<form data-ng-submit="addTask(task)">							
+								<div class="form-group">
+									<input class="input" 
+												type="text" 
+												id="task-name" 												
+												data-ng-model="task.name">
+									<label for="task-name">Task name</label>
+								</div>	
+								<div class="form-group">
+									<input class="input"
+												type="date" 												
+												data-ng-model="task.date">									
+								</div>
+	            	<div class="form-group">
+                	<input type="checkbox" 
+                				 id="priority" 
+                				 data-ng-model="task.priority">
+                	<label for="priority">Priority</label>
+              	</div>
+									<button type="submit" class="btn">add task</button>
+							</form>
+						</div>
+
+
+									
+				</div>					
+			</div>
+		</div>		
+	</main>
+
+
+
+	<!-- <div class="container anim-wrap" 
+		data-ng-class="animation"
+		data-ng-controller="animateCtrl"
+		data-body-height>
+		<div class="view" data-ng-view></div>
+	</div> -->
+
+</body>
+</html>
