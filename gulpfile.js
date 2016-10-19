@@ -25,30 +25,9 @@ gulp.task('browser-sync', [
 						baseDir: "./app"
 				},
 				notify: false,
-				files: ['./app/components/**/*.html','./app/components/**/*.js','./app/app.js','./app/assets/css/*.css']
+				files: ['./app/components/**/*.html','./app/*.html','./app/components/**/*.js','./app/app.js','./app/assets/css/*.css']
 		});
 });
-
-
-// gulp.task('scripts', function() { 
-// 	return gulp.src('app/js/**/*.js')		
-// 		.pipe(concat('main.js'))
-// 		.pipe(ngmin())
-// 		.pipe(gulp.dest('app/dist/js'))
-// 		.pipe(rename({suffix: '.min'}))
-// 		.pipe(ngAnnotate())
-// 		.pipe(uglify())
-// 		.pipe(gulp.dest('app/dist/js'))		
-// 		.pipe(notify({ message: 'Scripts task complete' }));
-// });
-
-
-// gulp.task('controllers', function() {
-//   return gulp.src('app/**/*.js,!app/libs/*.js,!app.js')
-//     .pipe(concat('main.min.js'))
-//     .pipe(uglify(''))
-//     .pipe(gulp.dest('app/'));
-// });
 
 gulp.task('js', function () {
   gulp.src(['app/assets/libs/**/*.js'])
@@ -64,7 +43,6 @@ gulp.task('js', function () {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('app/'))
 });
-
 
 
 gulp.task('styles', function () {
@@ -86,20 +64,6 @@ gulp.task('compress', function() {
   .pipe(imagemin(''))
   .pipe(gulp.dest('app/assets/img/'));
 });
-
-// gulp.task('scriptsConcat', function() {
-//   return gulp.src('app/libs/**/*.js')
-//     .pipe(concat('plagin.min.js'))
-//     .pipe(uglify(''))
-//     .pipe(gulp.dest('dist/js'));
-// });
-
-// gulp.task('scriptsCommon', function() {
-//   return gulp.src('app/js/*.js')
-//     .pipe(uglify(''))
-//     .pipe(concat('common.min.js'))
-//     .pipe(gulp.dest('dist/js'));
-// });
 
 gulp.task('vendorCss', function () {
   return gulp.src('app/libs/**/*.css')

@@ -1,19 +1,39 @@
 (function(){
 	angular.module('MyApp')
-		.controller('taskCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
-	  	
-	  	$scope.tasks = [];	  	
-
-	  	$scope.addTask = function(task){
+		.controller('taskCtrl', ['$scope', '$http', '$window', '$filter', function ($scope, $http, $window, $filter) {
+	  	$scope.timeStart = new Date();
+	  	$scope.now = $scope.timeStart.toISOString();
+	  	$scope.tasks = (localStorage.getItem('todos')!==null) ? JSON.parse(localStorage.getItem('todos')) : [];
+		
+	  	$scope.addTask = function(task){		
 	  		var newTask = {
-	  			"id": new Date().valueOf(),
+	  			"id": $scope.timeStart.valueOf(),
 	  			"name": task.name,
+	  			"status": false,
 	  			"priority": task.priority,
-	  			"date": task.date,
+	  			"timeStart": $scope.timeStart,
+	  			"timeEnd": task.timeEnd.toISOString(),
 	  			"coment": []
-	  		};
+	  		};	  		
 			$scope.tasks.push(newTask);
-	  		console.log($scope.tasks);
+			localStorage.setItem('todos', JSON.stringify($scope.tasks));
+	  	};
+
+	  	$scope.deleteTask = function(ind){
+	  		$scope.tasks.splice(ind, 1);
+	  		localStorage.setItem('todos', JSON.stringify($scope.tasks));
+	  	};
+
+	  	$scope.reloadTask = function(task,newDate){
+	  		var newDeadline = newDate.toISOString(),
+	  			lastTask    = $scope.tasks.length;
+	  		$scope.tasks.push(task);
+	  		$scope.tasks[lastTask].timeEnd = newDeadline;
+	  	localStorage.setItem('todos', JSON.stringify($scope.tasks));	  			
+	  	};
+	  	$scope.taskStatus = function(ind){
+	  		$scope.tasks[ind].status ? true : false;        	
+	  		localStorage.setItem('todos', JSON.stringify($scope.tasks));
 	  	};
 
 	  	$scope.addComent = function(coment,ind){
@@ -22,8 +42,7 @@
 	  			"date": new Date().toISOString()
 	  		}
 	  		$scope.tasks[ind].coment.push(newComent);
-	  	};
-		
-
+	  		localStorage.setItem('todos', JSON.stringify($scope.tasks));
+	  	};	  	
 	}]);
 }());

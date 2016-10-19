@@ -24,15 +24,11 @@
 
 <!-- Temporary paths to controllers -->
 <script src="components/toDoList/to-do-Ctrl.js"></script>
+<script src="components/toDoList/customFilters.js"></script>
 
-<script src="components/home/homepageCtrl.js"></script>
-<script src="components/page-one/pageOneCtrl.js"></script>
-<script src="components/page-one-inner/innerpageCtrl.js"></script>
-<script src="components/page-two/pageTwoCtrl.js"></script>
 
 <!-- Over components -->
 <script src="components/directives/directive.js"></script>
-<script src="components/services/dataService.js"></script>
 
 <!-- Styles -->
 <link rel="stylesheet" href="assets/css/vendor.min.css">
@@ -58,72 +54,151 @@
 			<div class="row">
 				<div class="col-md-12">	
 					<div class="to-do-wrap">
+						<div class="filter-nav">
+						    <select ng-model="sort">
+						     <option value="">All task</option>
+						     <option value="deadline">Deadline sort</option>						     
+						     <option value="done">Done task</option>						     
+						     <option value="open">Open task</option>						     
+						    </select>
+								<div class="input-wrap">
+							    <input type="checkbox"
+															 data-ng-model="sortpri">
+									<label>Priority sort</label>								
+								</div>
+								<div class="input-wrap">
+							    <input type="checkbox"
+															 data-ng-model="comentsort">
+									<label>No comment</label>								
+								</div>							
+						</div>
 
 
 						<div class="task-list">
-							<div data-ng-repeat="task in tasks">
-								<div data-ng-class="{orange: task.priority}">{{task.name}}</div>
-								<div>
-									<h2>Add coment</h2>
-									<p data-ng-repeat="coment in task.coment" class="label">
-										{{coment.text}}|| {{coment.date}}
-									</p>
-									<form data-ng-submit="addComent(coment,$index)">
+							<div data-ng-repeat="task in tasks | deadline:sort | priority:sortpri | coment:comentsort track by $index" class="task" data-ng-class="{orange: task.priority, danger: task.timeEnd < now, done: task.status}">					
+
+								<div class="item-task">
+									<div class="task-head">
+										<div class="buttons-wrap">
+												<button type="button" 
+														class="btn" 
+														data-ng-show="task.status"
+														data-ng-click="reassignT=!reassignT">
+															<i class="fa fa-repeat"></i> 
+															<!-- Repeat -->
+												</button>
+												<button type="button" class="btn" data-ng-click="editT=!editT">
+													<i class="fa fa-pencil" aria-hidden="true"></i>
+												</button>
+												<button type="button" class="btn" data-ng-click="comForm=!comForm">
+													<i class="fa fa-comments"></i> 
+													<!-- add comment -->
+												</button>
+												<button type="button" class="btn" data-ng-click="deleteTask($index)">
+													<i class="fa fa-times"></i>
+												</button>
+											
+										</div>										
+									</div>
+									<h4>{{task.name}}</h4>
+									<div class="status-block">
+										<input type="checkbox" 
+																 id="status"
+																 data-ng-change="taskStatus($index)"
+																 data-ng-model="task.status">
+										<label for="task-done">Status</label>
+									</div>
+									<div class="coment-list" data-ng-if="task.coment.length">
+										<h5>Comments</h5>
+										<p data-ng-repeat="coment in task.coment" class="label">
+											{{coment.text}}
+											<span>
+												<i class="fa fa-calendar-o"></i> {{coment.date | date: "yyyy-MM-dd"}}
+											</span>
+										</p>										
+									</div>
+								</div>
+								
+								<div data-ng-show="editT" class="coment-wrap">								
+									<form data-ng-submit="editT=!editT">
 										<div class="form-group">
 											<textarea  
 														type="text" 
-														id="coment" 												
+														id="coment"
+														data-ng-model="task.name">
+											</textarea>
+											<label for="coment">Edit task</label>
+										</div>
+										<button type="submit" class="btn">submit</button>
+									</form>
+								</div>
+								<div data-ng-show="comForm" class="coment-wrap">								
+									<form data-ng-submit="addComent(coment,$index);comForm=!comForm">
+										<div class="form-group">
+											<textarea  
+														type="text" 
+														id="coment"
 														data-ng-model="coment.text">
 											</textarea>
-											<label for="coment">Coment</label>
+											<label for="coment">Add coment</label>
 										</div>
 										<button type="submit" class="btn">add coment</button>
 									</form>
 								</div>
+
+								<div data-ng-show="reassignT" class="coment-wrap">								
+									<form>
+										<div class="form-group">
+										<input class="input"
+												type="date"
+												required
+												placeholder="yyyy-MM-dd"
+												min="{{timeStart | date: 'yyyy-MM-dd'}}"								
+												data-ng-model="newDate">
+											<label>Reassign task</label>
+										</div>
+										<button type="submit" class="btn" data-ng-click="reloadTask(task,newDate);reassignT=!reassignT">Reassign task</button>
+									</form>
+								</div>
+
 							</div>
-						</div>
-					</div>				
+						</div>								
 
 
-						<div class="add-task">
-							<form data-ng-submit="addTask(task)">							
-								<div class="form-group">
+						<div class="add-task mt4">
+							<form data-ng-submit="addTask(task)">		
+								<div class="input-wrap">
+									<label for="task-name">Task name</label>
 									<input class="input" 
 												type="text" 
-												id="task-name" 												
+												id="task-name" 			
+												required 									
 												data-ng-model="task.name">
-									<label for="task-name">Task name</label>
-								</div>	
-								<div class="form-group">
+								</div>												
+								<div class="input-wrap">
+									<label>End Time task</label>
 									<input class="input"
-												type="date" 												
-												data-ng-model="task.date">									
+												type="date"
+												required
+												placeholder="yyyy-MM-dd"
+												data-ng-model="task.timeEnd">									
 								</div>
-	            	<div class="form-group">
-                	<input type="checkbox" 
-                				 id="priority" 
-                				 data-ng-model="task.priority">
-                	<label for="priority">Priority</label>
-              	</div>
+								<div class="form-group">
+									<p>Priority</p>
+									<input type="checkbox" 
+												 id="priority" 
+												 data-ng-model="task.priority">
+									<label for="priority"></label>
+								</div>
 									<button type="submit" class="btn">add task</button>
 							</form>
 						</div>
 
-
-									
+					</div>										
 				</div>					
 			</div>
 		</div>		
 	</main>
-
-
-
-	<!-- <div class="container anim-wrap" 
-		data-ng-class="animation"
-		data-ng-controller="animateCtrl"
-		data-body-height>
-		<div class="view" data-ng-view></div>
-	</div> -->
 
 </body>
 </html>
