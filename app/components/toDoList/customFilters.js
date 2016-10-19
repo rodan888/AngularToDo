@@ -54,7 +54,7 @@ angular.module('MyApp')
 
 			if(sort){					
 				for(var i=0; i<valL;i++){
-					if(value[i].coment.length){
+					if(!value[i].coment.length){
 						result.push(value[i]);
 					};
 				}
@@ -62,5 +62,20 @@ angular.module('MyApp')
 			}else{
 				return value
 			}
+		}
+	}).filter('dateDiffer', function(){
+		return function(dateStart, dateEnd){
+			var start = new Date(dateStart).valueOf(),
+				end   = new Date(dateEnd).valueOf(),
+				difference  = end - start,				
+				result = parseInt(difference / 86400000);				
+
+			if(result > 0){
+				return 'Left '+ result +' days';
+			}else if(result == 0){
+				return 'Task end today';					
+			}else{
+				return 'Task stitch on '+ -result +' days';					
+			};				
 		}
 	});

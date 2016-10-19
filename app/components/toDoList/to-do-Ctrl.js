@@ -5,35 +5,39 @@
 	  	$scope.now = $scope.timeStart.toISOString();
 	  	$scope.tasks = (localStorage.getItem('todos')!==null) ? JSON.parse(localStorage.getItem('todos')) : [];
 		
+	  	function Task(name,priority,timeEnd) {
+	  			this.id = $scope.timeStart.valueOf();
+	  			this.name = name;
+	  			this.status = false;
+	  			this.priority = priority;
+	  			this.timeStart = $scope.timeStart;
+	  			this.timeEnd = timeEnd;
+	  			this.coment = [];
+	  		};	 
+
 	  	$scope.addTask = function(task){		
-	  		var newTask = {
-	  			"id": $scope.timeStart.valueOf(),
-	  			"name": task.name,
-	  			"status": false,
-	  			"priority": task.priority,
-	  			"timeStart": $scope.timeStart,
-	  			"timeEnd": task.timeEnd.toISOString(),
-	  			"coment": []
-	  		};	  		
-			$scope.tasks.push(newTask);
-			localStorage.setItem('todos', JSON.stringify($scope.tasks));
+	  		var newTask = new Task(task.name,task.priority,task.timeEnd.toISOString());
+				$scope.tasks.push(newTask);
+				localStorage.setItem('todos', JSON.stringify($scope.tasks));			
+	  	};
+
+	  	$scope.editTask = function(name,ind){
+	  		$scope.tasks[ind].name = name;
 	  	};
 
 	  	$scope.deleteTask = function(ind){
 	  		$scope.tasks.splice(ind, 1);
-	  		localStorage.setItem('todos', JSON.stringify($scope.tasks));
 	  	};
 
 	  	$scope.reloadTask = function(task,newDate){
 	  		var newDeadline = newDate.toISOString(),
-	  			lastTask    = $scope.tasks.length;
-	  		$scope.tasks.push(task);
-	  		$scope.tasks[lastTask].timeEnd = newDeadline;
-	  	localStorage.setItem('todos', JSON.stringify($scope.tasks));	  			
+	  				newTask = new Task(task.name,task.priority,newDate.toISOString());
+
+	  		$scope.tasks.push(newTask);
 	  	};
+
 	  	$scope.taskStatus = function(ind){
 	  		$scope.tasks[ind].status ? true : false;        	
-	  		localStorage.setItem('todos', JSON.stringify($scope.tasks));
 	  	};
 
 	  	$scope.addComent = function(coment,ind){
@@ -42,7 +46,11 @@
 	  			"date": new Date().toISOString()
 	  		}
 	  		$scope.tasks[ind].coment.push(newComent);
+	  	};
+
+	  	$scope.save = function(){
 	  		localStorage.setItem('todos', JSON.stringify($scope.tasks));
 	  	};	  	
+
 	}]);
 }());

@@ -49,6 +49,7 @@
 			<div class="row">
 				<div class="col-md-12">	
 					<div class="to-do-wrap">
+						<h2>You have {{tasks.length}} tasks!</h2>					
 						<div class="filter-nav">
 						    <select ng-model="sort">
 						     <option value="">All task</option>
@@ -74,32 +75,33 @@
 
 								<div class="item-task">
 									<div class="task-head">
+										<span>
+											<i class="fa fa-calendar-o"></i> {{task.timeStart | date: "yyyy-MM-dd"}}
+										</span>
+										<span>{{task.timeStart | dateDiffer:task.timeEnd}}</span>
 										<div class="buttons-wrap">
 												<button type="button" 
 														class="btn" 
 														data-ng-show="task.status"
 														data-ng-click="reassignT=!reassignT">
 															<i class="fa fa-repeat"></i> 
-															<!-- Repeat -->
 												</button>
 												<button type="button" class="btn" data-ng-click="editT=!editT">
 													<i class="fa fa-pencil" aria-hidden="true"></i>
 												</button>
 												<button type="button" class="btn" data-ng-click="comForm=!comForm">
 													<i class="fa fa-comments"></i> 
-													<!-- add comment -->
 												</button>
-												<button type="button" class="btn" data-ng-click="deleteTask($index)">
+												<button type="button" class="btn" data-ng-click="deleteTask($index);save()">
 													<i class="fa fa-times"></i>
-												</button>
-											
+												</button>											
 										</div>										
 									</div>
 									<h4>{{task.name}}</h4>
 									<div class="status-block">
 										<input type="checkbox" 
 																 id="status"
-																 data-ng-change="taskStatus($index)"
+																 data-ng-change="taskStatus($index);save()"
 																 data-ng-model="task.status">
 										<label for="task-done">Status</label>
 									</div>
@@ -115,7 +117,7 @@
 								</div>
 								
 								<div data-ng-show="editT" class="coment-wrap">								
-									<form data-ng-submit="editT=!editT">
+									<form data-ng-submit="edit.task(task.name,$index);editT=!editT;save()">
 										<div class="form-group">
 											<textarea  
 														type="text" 
@@ -128,21 +130,21 @@
 									</form>
 								</div>
 								<div data-ng-show="comForm" class="coment-wrap">								
-									<form data-ng-submit="addComent(coment,$index);comForm=!comForm">
+									<form data-ng-submit="addComent(coment,$index);comForm=!comForm;save()">
 										<div class="form-group">
 											<textarea  
 														type="text" 
 														id="coment"
 														data-ng-model="coment.text">
 											</textarea>
-											<label for="coment">Add coment</label>
+											<label for="coment">Add coment to: {{task.name}}</label>
 										</div>
 										<button type="submit" class="btn">add coment</button>
 									</form>
 								</div>
 
 								<div data-ng-show="reassignT" class="coment-wrap">								
-									<form>
+									<form data-ng-submit="reloadTask(task,newDate);reassignT=!reassignT;save()">
 										<div class="form-group">
 										<input class="input"
 												type="date"
@@ -152,7 +154,7 @@
 												data-ng-model="newDate">
 											<label>Reassign task</label>
 										</div>
-										<button type="submit" class="btn" data-ng-click="reloadTask(task,newDate);reassignT=!reassignT">Reassign task</button>
+										<button type="submit" class="btn">Reassign task</button>
 									</form>
 								</div>
 
@@ -175,6 +177,7 @@
 									<input class="input"
 												type="date"
 												required
+												min="{{timeStart | date: 'yyyy-MM-dd'}}"
 												placeholder="yyyy-MM-dd"
 												data-ng-model="task.timeEnd">									
 								</div>
